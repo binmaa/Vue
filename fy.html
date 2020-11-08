@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分页</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        参数设置：
+        起始页面数量：<input type="text" v-model="startPageSize"/>
+        页面最大数量：<input type="text" v-model="maxPageSize"/>
+        翻页数量：<input type="text" v-model="nextPageSize"/>
+        <hr/>
+        页面展示：
+        <ul>
+            <li v-for="(item,index) in dataList">{{index+1}}. {{item}}</li>
+        </ul>
+        <button @click="up" v-show="true">上一页</button>
+        <button @click="down" v-show="true">下一页</button>
+    </div>
+    
+</body>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            startPageSize:3,
+            maxPageSize:6,
+            nextPageSize:2,
+            indexS:0,
+            indexE:3,
+            currentMove:0,
+            datas:[[1,1,1],[2,2,2],[3,3,3],[4,4,4],[5,5,5],[6,6,6],[7,7,7],[8,8,8],[9,9,9],[10,10,10],[11,11,11],[12,12,12]],
+            dataList:[[1,1,1],[2,2,2],[3,3,3]]
+        },
+        methods:{
+            up:function(){
+
+            },
+            down:function(){
+                if(this.indexE+this.nextPageSize > this.datas.length){
+                    this.currentMove =  this.datas.length - this.indexE;
+                }else{
+                    this.currentMove = this.nextPageSize;
+                }
+                this.indexE = this.indexE+this.currentMove;
+                if(this.indexE - this.indexS > this.maxPageSize){
+                    this.indexS=this.indexS+this.currentMove;
+                }
+
+                this.dataList = this.datas.slice(this.indexS,this.indexE);
+                
+            }
+        }
+    })
+</script>
+</html>

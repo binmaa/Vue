@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>602安全保密设备临时添加页面</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" @keyup.enter="add" v-model="addMessage" placeholder="请输入"/>
+        <ul>
+            <li v-for="(note,index) in notes" :title="note" @mouseenter="moveIn(index)" @mouseleave="leave">{{index+1}}.{{note}} <span v-show="moveInNoteIndex == index" @click="del(index)">删除</span></li>
+        </ul>
+        {{notes.length}}条设备信息<button @click="clear" v-show="notes.length!=0">清空</button>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            notes:["服务器","单机","扫码枪"],
+            addMessage:'',
+            moveInNoteIndex:-1
+        },
+        methods:{
+            add:function(){
+                if(this.addMessage){
+                    this.notes.push(this.addMessage);
+                }
+                this.addMessage='';
+            },
+            clear:function(){
+                this.notes.splice(0,this.notes.length);
+            },
+            del:function(index){
+                this.notes.splice(index,1);
+            },
+            moveIn:function(index){
+                this.moveInNoteIndex = index;
+            },
+            leave:function(){
+                this.moveInNoteIndex = -1;
+            }
+
+        }
+    })
+</script>
+</html>

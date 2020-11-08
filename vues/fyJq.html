@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备分页</title>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+    参数设置：
+    起始页面数量：<input type="number" id="defaultShowSize" value="3" onchange="paramChange()"/>
+    页面最大数量：<input type="number" id="maxPageSize" value="6" onchange="paramChange()"/>
+    翻页数量：<input type="number" id="pageSize" value="2" onchange="paramChange()"/>
+    <hr/>
+    页面展示：
+    <div>
+        <ul id='fy'>
+
+        </ul>
+    </div>
+    <button onclick="fyInstances.up()" id="up">上一页</button>
+    <button onclick="fyInstances.down()" id="down">下一页</button>
+</body>
+<script>
+
+    //var fy = new fy();
+    
+    
+ 
+</script>
+<script>
+    (function(){
+        var fy = function(options){
+            if(!options.elementId || !options.data){
+                alert("指定分页区域和展示数据");
+                return;
+            }
+            this.options = $.extend({
+            "defaultShowSize" : 3,
+            "maxPageSize" : 6,
+            "pageSize" : 2,
+            "pageData":[],//当前页面展示
+            "indexS":0,//当前页面开始索引
+            "indexE":0,//当前页面结束索引
+            "moveS":0,//前面索引移动步数
+            "moveE":0//后面索引移动步数
+            },options);
+            this.init();
+        };
+        fy.prototype.init = function(){
+            this.options.pageData = this.options.data.slice(0,this.options.defaultShowSize > this.options.data.length ? this.options.data.length :this.options.defaultShowSize);
+            $('#'+this.options.elementId+' li').remove();
+            for(var i=0;i<this.options.pageData.length;i++){
+                $('#'+this.options.elementId).append('<li>'+(i+1)+'. '+this.options.pageData[i]+'</li>');
+            }
+            this.options.indexE = this.options.pageData.length;
+        };
+        fy.prototype.up=function(){
+            if(this.options.indexS != 0){
+                this.options.moveS = this.options.indexS < this.options.pageSize ? this.options.indexS - 0: this.options.pageSize;
+                this.options.indexS = this.options.indexS - this.options.moveS;
+            }
+            if(this.options.indexE != 0){
+                this.options.indexE = this.options.indexE >= this.options.pageSize ? this.options.indexE - this.options.pageSize:0;
+            }
+
+            this.options.pageData = this.options.data.slice(this.options.indexS,this.options.indexE);
+            $('#'+this.options.elementId+' li').remove();
+            for(var i=0;i<this.options.pageData.length;i++){
+                $('#'+this.options.elementId).append('<li>'+(i+1)+'. '+this.options.pageData[i]+'</li>');
+            }
+
+            if(this.options.indexE == 0){
+                $('#'+this.options.upId).hide();
+            }
+            $('#'+this.options.downId).show();
+
+        };
+        
+        fy.prototype.down=function(){
+            this.options.moveE = this.options.data.length > this.options.indexE + this.options.pageSize ? this.options.pageSize : (this.options.data.length - this.options.indexE);
+            this.options.indexE = this.options.indexE + this.options.moveE;
+
+            this.options.moveS = this.options.indexE - this.options.indexS > this.options.maxPageSize ? (this.options.indexE - this.options.indexS) - this.options.maxPageSize:0;//超了最大页容纳量 移动indexS
+            this.options.indexS = this.options.indexS +this.options.moveS;
+
+            this.options.pageData = this.options.data.slice(this.options.indexS,this.options.indexE);
+            $('#'+this.options.elementId+' li').remove();
+            for(var i=0;i<this.options.pageData.length;i++){
+                $('#'+this.options.elementId).append('<li>'+(i+1)+'. '+this.options.pageData[i]+'</li>');
+            }
+
+            if(this.options.indexE == this.options.data.length){
+                $('#'+this.options.downId).hide();
+            }
+            $('#'+this.options.upId).show();
+        }
+        
+        window.fy = fy;
+    }());
+    var data = [[1,1,1],[2,2,2],[3,3,3],[4,4,4],[5,5,5],[6,6,6],[7,7,7],[8,8,8],[9,9,9],[10,10,10],[11,11,11],[12,12,12]];
+    var fyInstances = new fy({"elementId":"fy","upId":"up","downId":"down","defaultShowSize" :3,"maxPageSize" : 6,"pageSize" : 2,"data":data});
+
+    function paramChange(){
+        var defaultShowSize = Number($("#defaultShowSize").val());
+        var maxPageSize =   Number($("#maxPageSize").val());
+        var pageSize =   Number($("#pageSize").val());
+        fyInstances = new fy({"elementId":"fy","upId":"up","downId":"down","defaultShowSize" :defaultShowSize,"maxPageSize" : maxPageSize,"pageSize" : pageSize,"data":data});
+    }
+</script>
+
+</html>

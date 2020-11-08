@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>714</title>
+   
+</head>
+<body>
+    <div id="app">{{message}}</div>
+    <div id="vtext" >
+        <h5 v-text="message">714</h5>
+        <h5>{{message}}714</h5>
+    </div>
+    <div id="vhtml" v-html="message">
+    </div>
+    <div id="vhtml2">
+        {{message}}
+    </div>
+
+    <div id="von">
+        <input type="button" value="v-on" v-on:click="functionName"/>
+        <input type="button" value="v-on" @click="functionName"/>
+        <h2 @click="changeMessage">{{message}}</h2>
+    </div>
+
+    <div id="jsjsl">
+        <button @click="add">+</button>
+        <span>{{num}}台</span>
+        <button @click="sub">-</button>
+    </div>
+
+    <div id="vshow">
+        <button @click="changeShow">显示图标</button>
+        <image src="http://www.bluewave.com.cn/template/91/4752.png" v-show="isShow&age>18"></image>
+        <image src="http://www.bluewave.com.cn/template/91/4752.png" v-if="isShow"></image>
+        
+    </div>
+
+    <div id="vbind">
+        <image v-bind:src="src" :title="vtitle" :class="{active:isActive}"></image>
+        <image v-bind:src="src" :title="vtitle" :class="isActive?'active':''" @click="changeClass"></image>
+    </div>
+</body>
+<style>
+    .active{
+        border: 1px solid red;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    var vbind = new Vue({
+        el:"#vbind",
+        data:{
+            src:"http://www.bluewave.com.cn/template/91/4752.png",
+            vtitle:"标题",
+            isActive:true
+        },
+        methods:{
+            changeClass:function(){
+                this.isActive=!this.isActive;
+            }
+        }
+    })
+    var vshow = new Vue({
+        el:"#vshow",
+        data:{
+            isShow:false,
+            age:19
+        },
+        methods:{
+            changeShow:function(){
+                this.isShow=!this.isShow;
+            }
+        }
+    })
+    var jsjsl = new Vue({
+        el:"#jsjsl",
+        data:{
+            num:1
+        },
+        methods:{
+            add:function(){
+                if(this.num >= 10){
+                    alert("超出台数");
+                }else{
+                    this.num++;
+                }
+            },
+            sub:function(){
+                if(this.num <= 0){
+                    alert("台数最少为0");
+                }else{
+                    this.num--;
+                }
+            }
+        }
+
+    })
+    var app = new Vue({
+        el:"#app",
+        data:{
+            message:"信息化台账"
+        }
+    });
+    var vtext = new Vue({
+        el:"#vtext",
+        data:{message:"一键导出"}
+    })
+    var vhtml = new Vue({
+        el:"#vhtml2",
+        data:{message:"<a href=''>测试导出  </a>"}
+    })
+
+    var von=new Vue({
+        el:"#von",
+        methods:{
+            functionName:function(){
+                alert("测试");
+            },
+            changeMessage:function(){
+                this.message=this.message+"修改";
+            }
+        },
+        data:{
+            message:"导出"
+        }
+    })
+    
+</script>
+</html>
